@@ -8,7 +8,7 @@ import java.util.Random;
  * @author David J. Barnes und Michael Kölling
  * @version 2008.03.30
  */
-public class Hase
+public class Hase extends Animal
 {
     // Eigenschaften aller Hasen (statische Datenfelder).
 

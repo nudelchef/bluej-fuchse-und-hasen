@@ -9,7 +9,7 @@ import java.util.Random;
  * @author David J. Barnes und Michael Kölling
  * @version 2008.03.30
  */
-public class Fuchs
+public class Fuchs extends Animal
 {
     // Eigenschaften aller Füchse (statische Datenfelder)
     
