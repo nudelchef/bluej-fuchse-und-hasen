@@ -105,7 +105,8 @@ public class FeldStatistik
                 nichtNull++;
             }
         }
-        return nichtNull > 1;
+        return true;
+       // return nichtNull > 1;
     }
     
     /**

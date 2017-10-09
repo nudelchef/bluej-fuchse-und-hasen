@@ -64,8 +64,6 @@ public class Fuchs extends Animal
      */
     public void jage(List<Fuchs> neueFuechse)
     {
-        alterErhoehen();
-        hungerVergroessern();
         if(lebendig) {
             gebaereNachwuchs(neueFuechse);
             // In die Richtung bewegen, in der Futter gefunden wurde.
@@ -83,6 +81,13 @@ public class Fuchs extends Animal
                 sterben();
             }
         }
+    }
+    
+    
+    public void update()
+    {
+        alterErhoehen();
+        hungerVergroessern();       
     }
     
     /**
@@ -170,7 +175,7 @@ public class Fuchs extends Animal
      * Ein Fuchs kann gebären, wenn er das gebärfähige
      * Alter erreicht hat.
      */
-    private boolean kannGebaeren()
+    public boolean kannGebaeren()
     {
         return alter >= GEBAER_ALTER;
     }

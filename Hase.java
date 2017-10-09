@@ -47,9 +47,14 @@ public class Hase extends Animal
      * an Altersschwäche.
      * @param neueHasen Eine Liste, in die neue Hasen eingefügt werden.
      */
+    
+    public void update()
+    {
+        alterErhoehen();        
+    }
+    
     public void laufe(List<Hase> neueHasen)
     {
-        alterErhoehen();
         if(lebendig) {
             gebaereNachwuchs(neueHasen);
             // nur in das nächste Feld setzen, wenn eine Position frei ist
@@ -111,7 +116,7 @@ public class Hase extends Animal
      * Ein Hase kann gebären, wenn er das gebärfähige
      * Alter erreicht hat.
      */
-    private boolean kannGebaeren()
+    public boolean kannGebaeren()
     {
         return alter >= GEBAER_ALTER;
     }

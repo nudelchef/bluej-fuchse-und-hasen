@@ -70,4 +70,12 @@ abstract class Animal
             feld = null;
         }
     }
+    
+    public abstract void update();
+    
+    /**
+     * Ein Hase kann gebären, wenn er das gebärfähige
+     * Alter erreicht hat.
+     */
+    public abstract boolean kannGebaeren();
 }
