@@ -1,19 +1,19 @@
 
 /**
- * Beschreiben Sie hier die Klasse Baer.
+ * Beschreiben Sie hier die Klasse Bär.
  * 
  * @author (Ihr Name) 
  * @version (eine Versionsnummer oder ein Datum)
  */
-public class Baer extends Animal
+public class Bär extends Animal
 {
     // Instanzvariablen - ersetzen Sie das folgende Beispiel mit Ihren Variablen
     private int x;
 
     /**
-     * Konstruktor für Objekte der Klasse Baer
+     * Konstruktor für Objekte der Klasse Bär
      */
-    public Baer()
+    public Bär()
     {
         // Instanzvariable initialisieren
         x = 0;
