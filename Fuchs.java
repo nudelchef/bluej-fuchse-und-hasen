@@ -25,19 +25,11 @@ public class Fuchs extends Animal
     // dies die Anzahl der Schritte, die ein Fuchs bis zur
     //nächsten Mahlzeit laufen kann.
     private static final int HASEN_NAEHRWERT = 7;
-	// Ein gemeinsamer Zufallsgenerator, der die Geburten steuert.
+    // Ein gemeinsamer Zufallsgenerator, der die Geburten steuert.
     private static final Random rand = Zufallssteuerung.gibZufallsgenerator();
     
     // Individuelle Eigenschaften (Instanzfelder).
 
-    // Das Alter dieses Fuchses.
-    private int alter;
-    // Ist dieser Fuchs noch lebendig?
-    private boolean lebendig;
-    // Die Position dieses Fuchses
-    private Position position;
-    // Das belegte Feld
-    private Feld feld;
     // Der Futter-Level, der durch das Fressen von Hasen erhöht wird.
     private int futterLevel;
 
@@ -53,10 +45,7 @@ public class Fuchs extends Animal
      */
     public Fuchs(boolean zufaelligesAlter, Feld feld, Position position)
     {
-        alter = 0;
-        lebendig = true;
-        this.feld = feld;
-        setzePosition(position);
+        super(zufaelligesAlter,feld,position);
         if(zufaelligesAlter) {
             alter = rand.nextInt(MAX_ALTER);
             futterLevel = rand.nextInt(HASEN_NAEHRWERT);
@@ -97,41 +86,10 @@ public class Fuchs extends Animal
     }
     
     /**
-     * Prüfe, ob dieser Fuchs noch lebendig ist.
-     * @return true wenn dieser Fuchs noch lebt.
-     */
-    public boolean istLebendig()
-    {
-        return lebendig;
-    }
-
-    /**
-     * Liefere die Position des Fuches.
-     * @return die Position des Fuches.
-     */
-    public Position gibPosition()
-    {
-        return position;
-    }
-
-    /**
-     * Setze den Fuchs auf die gegebene im aktuellen Feld.
-     * @param neuePosition die neue Position dieses Fuchses.
-     */
-    public void setzePosition(Position neuePosition)
-    {
-        if(position != null) {
-            feld.raeumen(position);
-        }
-        position = neuePosition;
-        feld.platziere(this, neuePosition);
-    }
-
-    /**
      * Erhöhe das Alter dieses Fuchses. Dies kann zu seinem
      * Tod führen.
      */
-    private void alterErhoehen()
+    public void alterErhoehen()
     {
         alter++;
         if(alter > MAX_ALTER) {
@@ -217,17 +175,4 @@ public class Fuchs extends Animal
         return alter >= GEBAER_ALTER;
     }
     
-    /**
-     * Anzeigen, dass der Fuchs nicht mehr laenger lebendig ist.
-     * Fuchs aus dem Feld entfernen.
-     */
-    private void sterben()
-    {
-        lebendig = false;
-        if(position != null) {
-            feld.raeumen(position);
-            position = null;
-            feld = null;
-        }
-    }
 }

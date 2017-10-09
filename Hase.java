@@ -25,14 +25,6 @@ public class Hase extends Animal
     
     // Individuelle Eigenschaften eines Hasen (Instanzfelder).
     
-    // Das Alter dieses Hasen.
-    private int alter;
-    // Ist dieser Hase noch lebendig?
-    private boolean lebendig;
-    // Die Position dieses Hasen
-    private Position position;
-    // Das belegte Feld
-    private Feld feld;
 
     /**
      * Erzeuge einen neuen Hasen. Ein neuer Hase kann das Alter 0 
@@ -43,10 +35,7 @@ public class Hase extends Animal
      */
     public Hase(boolean zufaelligesAlter, Feld feld, Position position)
     {
-        alter = 0;
-        lebendig = true;
-        this.feld = feld;
-        setzePosition(position);
+        super(zufaelligesAlter,feld,position);
         if(zufaelligesAlter) {
             alter = rand.nextInt(MAX_ALTER);
         }
@@ -76,55 +65,10 @@ public class Hase extends Animal
     }
 
     /**
-     * Prüfe, ob dieser Hase noch lebendig ist.
-     * @return true wenn dieser Hase noch lebt.
-     */
-    public boolean istLebendig()
-    {
-        return lebendig;
-    }
-
-    /**
-     * Liefere die Position des Hasen.
-     * @return die Position des Hasen.
-     */
-    public Position gibPosition()
-    {
-        return position;
-    }
-	
-    /**
-     * Anzeigen, dass der Hase nicht mehr laenger lebendig ist.
-     * Hase aus dem Feld entfernen.
-     */
-    public void sterben()
-    {
-        lebendig = false;
-        if(position != null) {
-            feld.raeumen(position);
-            position = null;
-            feld = null;
-        }
-    }
-
-    /**
-     * Setze den Hasen auf die gegebene Position im aktuellen Feld.
-     * @param neuePosition die neue Position dieses Hasen.
-     */
-    public void setzePosition(Position neuePosition)
-    {
-        if(position != null) {
-            feld.raeumen(position);
-        }
-        position = neuePosition;
-        feld.platziere(this, neuePosition);
-    }
-
-    /**
      * Erhöhe das Alter. 
      * Dies kann zum Tod des Hasen führen.
      */
-    private void alterErhoehen()
+    public void alterErhoehen()
     {
         alter++;
         if(alter > MAX_ALTER) {

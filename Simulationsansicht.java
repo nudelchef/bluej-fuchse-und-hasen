@@ -45,6 +45,10 @@ public class Simulationsansicht extends JFrame
         farben = new LinkedHashMap<Class, Color>();
 
         setTitle("Simulation von Füchsen und Hasen");
+        
+        
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
         schrittLabel = new JLabel(SCHRITT_PREFIX, JLabel.CENTER);
         population = new JLabel(POPULATION_PREFIX, JLabel.CENTER);
         

@@ -1,33 +1,24 @@
+import java.util.List;
+import java.util.Random;
 
-/**
- * Beschreiben Sie hier die Klasse Bär.
- * 
- * @author (Ihr Name) 
- * @version (eine Versionsnummer oder ein Datum)
- */
 public class Bär extends Animal
 {
-    // Instanzvariablen - ersetzen Sie das folgende Beispiel mit Ihren Variablen
-    private int x;
-
-    /**
-     * Konstruktor für Objekte der Klasse Bär
-     */
-    public Bär()
+    // Das Höchstalter eines BÄren.
+    private static final int MAX_ALTER = 100;
+    // Ein gemeinsamer Zufallsgenerator, der die Geburten steuert.
+    private static final Random rand = Zufallssteuerung.gibZufallsgenerator();
+    
+    public Bär(boolean zufaelligesAlter, Feld feld, Position position)
     {
-        // Instanzvariable initialisieren
-        x = 0;
+        super(zufaelligesAlter,feld,position);
+        if(zufaelligesAlter) {
+            alter = rand.nextInt(MAX_ALTER);
+        }
     }
-
-    /**
-     * Ein Beispiel einer Methode - ersetzen Sie diesen Kommentar mit Ihrem eigenen
-     * 
-     * @param  y    ein Beispielparameter für eine Methode
-     * @return        die Summe aus x und y
-     */
-    public int beispielMethode(int y)
+    
+    
+    public void alterErhoehen()
     {
-        // tragen Sie hier den Code ein
-        return x + y;
+        
     }
 }
