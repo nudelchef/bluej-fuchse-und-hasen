@@ -6,17 +6,17 @@ abstract class Animal
     public int alter;
     // Ist dieser Fuchs noch lebendig?
     public boolean lebendig;
-    // Die Position dieses Fuchses
-    public Position position;
+    // Die Location dieses Fuchses
+    public Location location;
     // Das belegte Feld
     public Feld feld;
     
-    public Animal(boolean zufaelligesAlter, Feld feld, Position position)
+    public Animal(boolean zufaelligesAlter, Feld feld, Location location)
     {
         alter = 0;
         lebendig = true;
         this.feld = feld;
-        setzePosition(position);
+        setzeLocation(location);
     }
     
     
@@ -30,25 +30,25 @@ abstract class Animal
     }
 
     /**
-     * Liefere die Position des Fuches.
-     * @return die Position des Fuches.
+     * Liefere die Location des Fuches.
+     * @return die Location des Fuches.
      */
-    public Position gibPosition()
+    public Location getLocation()
     {
-        return position;
+        return location;
     }
 
     /**
      * Setze den Fuchs auf die gegebene im aktuellen Feld.
-     * @param neuePosition die neue Position dieses Fuchses.
+     * @param neueLocation die neue Location dieses Fuchses.
      */
-    public void setzePosition(Position neuePosition)
+    public void setLocation(Location newLocation)
     {
-        if(position != null) {
-            feld.raeumen(position);
+        if(location != null) {
+            feld.raeumen(location);
         }
-        position = neuePosition;
-        feld.platziere(this, neuePosition);
+        location = newLocation;
+        feld.platziere(this, newLocation);
     }
 
     /**
@@ -64,9 +64,9 @@ abstract class Animal
     public void sterben()
     {
         lebendig = false;
-        if(position != null) {
-            feld.raeumen(position);
-            position = null;
+        if(location != null) {
+            feld.raeumen(location);
+            location = null;
             feld = null;
         }
     }

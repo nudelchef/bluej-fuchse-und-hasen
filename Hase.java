@@ -31,11 +31,11 @@ public class Hase extends Animal
      *(neu geboren) oder ein zufälliges Alter haben.
      * @param zufaelligesAlter soll der Hase ein zufälliges Alter haben?
      * @param feld Das aktuelle belegte Feld
-     * @param position Die Position im Feld
+     * @param location Die Location im Feld
      */
-    public Hase(boolean zufaelligesAlter, Feld feld, Position position)
+    public Hase(boolean zufaelligesAlter, Feld feld, Location location)
     {
-        super(zufaelligesAlter,feld,position);
+        super(zufaelligesAlter,feld,location);
         if(zufaelligesAlter) {
             alter = rand.nextInt(MAX_ALTER);
         }
@@ -57,10 +57,10 @@ public class Hase extends Animal
     {
         if(lebendig) {
             gebaereNachwuchs(neueHasen);
-            // nur in das nächste Feld setzen, wenn eine Position frei ist
-            Position neuePosition = feld.freieNachbarposition(position);
-            if(neuePosition != null) {
-                setzePosition(neuePosition);
+            // nur in das nächste Feld setzen, wenn eine Location frei ist
+            Location neueLocation = feld.freieNachbarlocation(location);
+            if(neueLocation != null) {
+                setzeLocation(neueLocation);
             }
             else {
                 // Überpopulation 
@@ -83,17 +83,17 @@ public class Hase extends Animal
        
     /**
      * Prüfe, ob dieser Hase in diesem Schritt gebären kann.
-     * Neugeborene kommen in freie Nachbarpositionen.
+     * Neugeborene kommen in freie Nachbarlocationen.
      * @param neueHasen Liste, in die neugeborene Hasen eingetragen werden.
      */
     private void gebaereNachwuchs(List<Hase> neueHasen)
     {
-        // Neugeborene kommen in freie Nachbarpositionen.
-        // Freie Nachbarpositionen abfragen.
-        List<Position> frei = feld.freieNachbarpositionen(position);
+        // Neugeborene kommen in freie Nachbarlocationen.
+        // Freie Nachbarlocationen abfragen.
+        List<Location> frei = feld.freieNachbarlocationen(location);
         int geburten = traechtig();
         for(int b = 0; b < geburten && frei.size() > 0; b++) {
-            Position pos = frei.remove(0);
+            Location pos = frei.remove(0);
             Hase jung = new Hase(false, feld, pos);
             neueHasen.add(jung);
         }

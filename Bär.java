@@ -23,9 +23,9 @@ public class Bär extends Animal
     
     // Der Futter-Level, der durch das Fressen von Hasen erhöht wird.
     private int futterLevel;
-    public Bär(boolean zufaelligesAlter, Feld feld, Position position)
+    public Bär(boolean zufaelligesAlter, Feld feld, Location location)
     {
-        super(zufaelligesAlter,feld,position);
+        super(zufaelligesAlter,feld,location);
         if(zufaelligesAlter) 
         {
             alter = rand.nextInt(MAX_ALTER);
@@ -58,18 +58,18 @@ public class Bär extends Animal
         
     /**
      * Prüfe, ob dieser Fuchs in diesem Schritt gebären kann.
-     * Neugeborene kommen in freie Nachbarpositionen.
+     * Neugeborene kommen in freie Nachbarlocationen.
      * @param neueFuechse Liste, in die neugeborene Füchse eingetragen werden.
      */
     private void gebaereNachwuchs(List<Bär> neueBären)
     {
-        // Neugeborene kommen in freie Nachbarpositionen.
-        // Freie Nachbarpositionen abfragen.
-        List<Position> frei = feld.freieNachbarpositionen(position);
+        // Neugeborene kommen in freie Nachbarlocationen.
+        // Freie Nachbarlocationen abfragen.
+        List<Location> frei = feld.freieNachbarlocationen(location);
         int geburten = traechtig();
         for(int b = 0; b < geburten && frei.size() > 0; b++) 
         {
-            Position pos = frei.remove(0);
+            Location pos = frei.remove(0);
             Bär jung = new Bär(false, feld, pos);
             neueBären.add(jung);
         }
@@ -100,14 +100,14 @@ public class Bär extends Animal
         if(lebendig) {
             gebaereNachwuchs(neueBären);
             // In die Richtung bewegen, in der Futter gefunden wurde.
-            Position neuePosition = findeNahrung(position);
-            if(neuePosition == null) {  
+            Location neueLocation = findeNahrung(location);
+            if(neueLocation == null) {  
                 // kein Futter - zufällig bewegen
-                neuePosition = feld.freieNachbarposition(position);
+                neueLocation = feld.freieNachbarlocation(location);
             }
             // Ist Bewegung möglich?
-            if(neuePosition != null) {
-                setzePosition(neuePosition);
+            if(neueLocation != null) {
+                setzeLocation(neueLocation);
             }
             else {
                 // Überpopulation
@@ -117,18 +117,18 @@ public class Bär extends Animal
     }
        
     /**
-     * Suche nach Nahrung (Hasen) in den Nachbarpositionen.
+     * Suche nach Nahrung (Hasen) in den Nachbarlocationen.
      * Es wird nur der erste lebendige Hase gefressen.
-     * @param position die Position, an der sich der Fuchs befindet.
-     * @return die Position mit Nahrung, oder null, wenn keine vorhanden.
+     * @param location die Location, an der sich der Fuchs befindet.
+     * @return die Location mit Nahrung, oder null, wenn keine vorhanden.
      */
-    private Position findeNahrung(Position position)
+    private Location findeNahrung(Location location)
     {
-        List<Position> nachbarPositionen = 
-                               feld.nachbarpositionen(position);
-        Iterator<Position> iter = nachbarPositionen.iterator();
+        List<Location> nachbarLocationen = 
+                               feld.nachbarlocationen(location);
+        Iterator<Location> iter = nachbarLocationen.iterator();
         while(iter.hasNext()) {
-            Position pos = iter.next();
+            Location pos = iter.next();
             Object tier = feld.gibObjektAn(pos);
             if(tier instanceof Fuchs) {
                 Fuchs fuchs = (Fuchs) tier;

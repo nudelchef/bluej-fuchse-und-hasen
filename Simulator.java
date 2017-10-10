@@ -19,13 +19,13 @@ public class Simulator
     // Die Standardtiefe für ein Feld.
     private static final int STANDARD_TIEFE = 100;
     // Die Wahrscheinlichkeit für die Geburt eines Fuchses an
-    // einer beliebigen Position im Feld.
+    // einer beliebigen Location im Feld.
     private static final double FUCHSGEBURT_WAHRSCHEINLICH = 0.02;
     // Die Wahrscheinlichkeit für die Geburt eines Hasen an
-    // einer beliebigen Position im Feld.
+    // einer beliebigen Location im Feld.
     private static final double HASENGEBURT_WAHRSCHEINLICH = 0.08;    
     // Die Wahrscheinlichkeit für die Geburt eines Bären an
-    // einer beliebigen Position im Feld.
+    // einer beliebigen Location im Feld.
     private static final double BÄRENGEBURT_WAHRSCHEINLICH = 0.01;    
 
     // Listen der Tiere im Feld. Getrennte Listen vereinfachen das Iterieren.
@@ -65,7 +65,7 @@ public class Simulator
         bären = new ArrayList<Bär>();
         feld = new Feld(tiefe, breite);
 
-        // Eine Ansicht der Zustände aller Positionen im Feld erzeugen.
+        // Eine Ansicht der Zustände aller Locationen im Feld erzeugen.
         ansicht = new Simulationsansicht(tiefe, breite);
         ansicht.setzeFarbe(Fuchs.class, Color.blue);
         ansicht.setzeFarbe(Hase.class, Color.orange);
@@ -99,7 +99,7 @@ public class Simulator
     
     /**
      * Führe einen einzelnen Simulationsschritt aus:
-     * Durchlaufe alle Feldpositionen und aktualisiere den 
+     * Durchlaufe alle Feldlocationen und aktualisiere den 
      * Zustand jedes Fuchses und Hasen.
      */
     public void simuliereEinenSchritt()
@@ -175,21 +175,21 @@ public class Simulator
         for(int zeile = 0; zeile < feld.gibTiefe(); zeile++) {
             for(int spalte = 0; spalte < feld.gibBreite(); spalte++) {
                 if(rand.nextDouble() <= FUCHSGEBURT_WAHRSCHEINLICH) {
-                    Position position = new Position(zeile, spalte); 
-                    Fuchs fuchs = new Fuchs(true, feld, position);
+                    Location location = new Location(zeile, spalte); 
+                    Fuchs fuchs = new Fuchs(true, feld, location);
                     fuechse.add(fuchs);
                 }
                 else if(rand.nextDouble() <= HASENGEBURT_WAHRSCHEINLICH) {
-                    Position position = new Position(zeile, spalte); 
-                    Hase hase = new Hase(true, feld, position);
+                    Location location = new Location(zeile, spalte); 
+                    Hase hase = new Hase(true, feld, location);
                     hasen.add(hase);
                 }
                 else if(rand.nextDouble() <= BÄRENGEBURT_WAHRSCHEINLICH) {
-                    Position position = new Position(zeile, spalte); 
-                    Bär bär = new Bär(true, feld, position);
+                    Location location = new Location(zeile, spalte); 
+                    Bär bär = new Bär(true, feld, location);
                     bären.add(bär);
                 }
-                // ansonsten die Position leer lassen
+                // ansonsten die Location leer lassen
             }
         }
     }

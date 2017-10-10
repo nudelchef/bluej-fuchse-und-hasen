@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Ein rechteckiges Gitter von Feldpositionen.
- * Jede Position kann ein einzelnes Tier aufnehmen.
+ * Ein rechteckiges Gitter von Feldlocationen.
+ * Jede Location kann ein einzelnes Tier aufnehmen.
  * 
  * @author David J. Barnes und Michael Kölling
  * @version 2008.03.30
@@ -45,55 +45,55 @@ public class Feld
     }
     
     /**
-     * Räume die gegebene Position.
-     * @param position die zu leerende Position
+     * Räume die gegebene Location.
+     * @param location die zu leerende Location
      */
-    public void raeumen(Position position)
+    public void raeumen(Location location)
     {
-        feld[position.gibZeile()][position.gibSpalte()] = null;
+        feld[location.gibZeile()][location.gibSpalte()] = null;
     }
     
     /**
-     * Platziere das gegebene Tier an der angegebenen Position.
-     * Wenn an der Position bereits ein Tier eingetragen ist,
+     * Platziere das gegebene Tier an der angegebenen Location.
+     * Wenn an der Location bereits ein Tier eingetragen ist,
      * geht es verloren.
      * @param tier das Tier das platziert werden soll.
-     * @param zeile die Zeilenkoordinate der Position.
-     * @param spalte die Spaltenkoordinate der Position.
+     * @param zeile die Zeilenkoordinate der Location.
+     * @param spalte die Spaltenkoordinate der Location.
      */
     public void platziere(Object tier, int zeile, int spalte)
     {
-        platziere(tier, new Position(zeile, spalte));
+        platziere(tier, new Location(zeile, spalte));
     }
     
     /**
-     * Platziere das gegebene Tier an der angegebenen Position.
-     * Wenn an der Position bereits ein Tier eingetragen ist,
+     * Platziere das gegebene Tier an der angegebenen Location.
+     * Wenn an der Location bereits ein Tier eingetragen ist,
      * geht es verloren.
      * @param tier das Tier, das platziert werden soll.
-     * @param position die Position, an der das Tier platziert werden soll.
+     * @param location die Location, an der das Tier platziert werden soll.
      */
-    public void platziere(Object tier, Position position)
+    public void platziere(Object tier, Location location)
     {
-        feld[position.gibZeile()][position.gibSpalte()] = tier;
+        feld[location.gibZeile()][location.gibSpalte()] = tier;
     }
     
     /**
-     * Liefere das Tier an der angegebenen Position, falls vorhanden.
-     * @param position die gewünschte Position.
-     * @return das Tier an der angegebenen Position oder null, wenn
+     * Liefere das Tier an der angegebenen Location, falls vorhanden.
+     * @param location die gewünschte Location.
+     * @return das Tier an der angegebenen Location oder null, wenn
      *         dort kein Tier eingetragen ist.
      */
-    public Object gibObjektAn(Position position)
+    public Object gibObjektAn(Location location)
     {
-        return gibObjektAn(position.gibZeile(), position.gibSpalte());
+        return gibObjektAn(location.gibZeile(), location.gibSpalte());
     }
     
     /**
-     * Liefere das Tier an der angegebenen Position, falls vorhanden.
+     * Liefere das Tier an der angegebenen Location, falls vorhanden.
      * @param zeile die gewünschte Zeile.
      * @param spalte die gewünschte Spalte.
-     * @return das Tier an der angegebenen Position oder null, wenn
+     * @return das Tier an der angegebenen Location oder null, wenn
      *         dort kein Tier eingetragen ist.
      */
     public Object gibObjektAn(int zeile, int spalte)
@@ -102,31 +102,31 @@ public class Feld
     }
     
     /**
-     * Wähle zufällig eine der Positionen, die an die gegebene Position
-     * angrenzen, oder die gegebene Position selbst.
-     * Die gelieferte Position liegt innerhalb der gültigen Grenzen
+     * Wähle zufällig eine der Locationen, die an die gegebene Location
+     * angrenzen, oder die gegebene Location selbst.
+     * Die gelieferte Location liegt innerhalb der gültigen Grenzen
      * dieses Feldes.
-     * @param position die Position, von der ein Nachbar zu wählen ist.
-     * @return eine gültige Position innerhalb dieses Feldes. Das kann
-     *         auch die gegebene Position selbst sein.
+     * @param location die Location, von der ein Nachbar zu wählen ist.
+     * @return eine gültige Location innerhalb dieses Feldes. Das kann
+     *         auch die gegebene Location selbst sein.
      */
-    public Position zufaelligeNachbarposition(Position position)
+    public Location zufaelligeNachbarlocation(Location location)
     {
-        List<Position> nachbarn = nachbarpositionen(position);
+        List<Location> nachbarn = nachbarlocationen(location);
         return nachbarn.get(0);
     }
     
     /**
-     * Liefert eine gemischte Liste von freien Nachbarposition.
-     * @param position die Position, für die Nachbarpositionen
+     * Liefert eine gemischte Liste von freien Nachbarlocation.
+     * @param location die Location, für die Nachbarlocationen
      *                 zu liefern ist.
-     * @return eine Liste freier Nachbarpositionen.
+     * @return eine Liste freier Nachbarlocationen.
      */
-    public List<Position> freieNachbarpositionen(Position position)
+    public List<Location> freieNachbarlocationen(Location location)
     {
-        List<Position> frei = new LinkedList<Position>();
-        List<Position> nachbarn = nachbarpositionen(position);
-        for(Position naechste : nachbarn) {
+        List<Location> frei = new LinkedList<Location>();
+        List<Location> nachbarn = nachbarlocationen(location);
+        for(Location naechste : nachbarn) {
             if(gibObjektAn(naechste) == null) {
                 frei.add(naechste);
             }
@@ -135,17 +135,17 @@ public class Feld
     }
     
     /**
-     * Versuche, eine freie Nachbarposition zur gegebenen Position zu
+     * Versuche, eine freie Nachbarlocation zur gegebenen Location zu
      * finden. Wenn es keine gibt, liefere null.
-     * Die gelieferte Position liegt innerhalb der Feldgrenzen.
-     * @param position die Position, für die eine Nachbarposition
+     * Die gelieferte Location liegt innerhalb der Feldgrenzen.
+     * @param location die Location, für die eine Nachbarlocation
      *                 zu liefern ist.
-     * @return eine gültige Position innerhalb der Feldgrenzen. 
+     * @return eine gültige Location innerhalb der Feldgrenzen. 
      */
-    public Position freieNachbarposition(Position position)
+    public Location freieNachbarlocation(Location location)
     {
-        // Die verfügbaren freien Nachbarpositionen
-        List<Position> frei = freieNachbarpositionen(position);
+        // Die verfügbaren freien Nachbarlocationen
+        List<Location> frei = freieNachbarlocationen(location);
         if(frei.size() > 0) {
             return frei.get(0);
         } 
@@ -155,37 +155,37 @@ public class Feld
     }
 
     /**
-     * Liefert eine gemischte Liste von Nachbarpositionen
-     * zu der gegebenen Position. Diese Liste enthält nicht die gegebene 
-     * Position selbst. Alle Positionen liegen innerhalb des Feldes.
-     * @param position die Position, für die Nachbarpositionen zu liefern sind.
-     * @return eine Liste der Nachbarpositionen zur gegebenen Position.
+     * Liefert eine gemischte Liste von Nachbarlocationen
+     * zu der gegebenen Location. Diese Liste enthält nicht die gegebene 
+     * Location selbst. Alle Locationen liegen innerhalb des Feldes.
+     * @param location die Location, für die Nachbarlocationen zu liefern sind.
+     * @return eine Liste der Nachbarlocationen zur gegebenen Location.
      */
-    public List<Position> nachbarpositionen(Position position)
+    public List<Location> nachbarlocationen(Location location)
     {
-        assert position != null : "Keine Position an nachbarpostionen uebergeben";
-        // Die Liste der zurueckzuliefernden Positionen
-        List<Position> positionen = new LinkedList<Position>();
-        if(position != null) {
-            int zeile = position.gibZeile();
-            int spalte = position.gibSpalte();
+        assert location != null : "Keine Location an nachbarpostionen uebergeben";
+        // Die Liste der zurueckzuliefernden Locationen
+        List<Location> locationen = new LinkedList<Location>();
+        if(location != null) {
+            int zeile = location.gibZeile();
+            int spalte = location.gibSpalte();
             for(int zDiff = -1; zDiff <= 1; zDiff++) {
                 int naechsteZeile = zeile + zDiff;
                 if(naechsteZeile >= 0 && naechsteZeile < tiefe) {
                     for(int sDiff = -1; sDiff <= 1; sDiff++) {
                         int naechsteSpalte = spalte + sDiff;
-                        // Ungueltige Positionen und Ausgangsposition ausschliessen.
+                        // Ungueltige Locationen und Ausgangslocation ausschliessen.
                         if(naechsteSpalte >= 0 && naechsteSpalte < breite && (zDiff != 0 || sDiff != 0)) {
-                            positionen.add(new Position(naechsteZeile, naechsteSpalte));
+                            locationen.add(new Location(naechsteZeile, naechsteSpalte));
                         }
                     }
                 }
             }          
             // Mische die Liste. Verschiedene andere Methoden verlassen sich darauf, 
             // dass die Liste ungeordnet ist.
-            Collections.shuffle(positionen, rand);
+            Collections.shuffle(locationen, rand);
         }
-        return positionen;
+        return locationen;
     }
 
     /**
