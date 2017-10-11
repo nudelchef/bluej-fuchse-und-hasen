@@ -74,7 +74,7 @@ public class Fuchs extends Animal
             }
             // Ist Bewegung möglich?
             if(neueLocation != null) {
-                setzeLocation(neueLocation);
+                setLocation(neueLocation);
             }
             else {
                 // Überpopulation

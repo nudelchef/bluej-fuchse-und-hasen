@@ -50,7 +50,7 @@ public class Feld
      */
     public void raeumen(Location location)
     {
-        feld[location.gibZeile()][location.gibSpalte()] = null;
+        feld[location.getX()][location.getY()] = null;
     }
     
     /**
@@ -75,7 +75,7 @@ public class Feld
      */
     public void platziere(Object tier, Location location)
     {
-        feld[location.gibZeile()][location.gibSpalte()] = tier;
+        feld[location.getX()][location.getY()] = tier;
     }
     
     /**
@@ -86,7 +86,7 @@ public class Feld
      */
     public Object gibObjektAn(Location location)
     {
-        return gibObjektAn(location.gibZeile(), location.gibSpalte());
+        return gibObjektAn(location.getX(), location.getY());
     }
     
     /**
@@ -167,8 +167,8 @@ public class Feld
         // Die Liste der zurueckzuliefernden Locationen
         List<Location> locationen = new LinkedList<Location>();
         if(location != null) {
-            int zeile = location.gibZeile();
-            int spalte = location.gibSpalte();
+            int zeile = location.getX();
+            int spalte = location.getY();
             for(int zDiff = -1; zDiff <= 1; zDiff++) {
                 int naechsteZeile = zeile + zDiff;
                 if(naechsteZeile >= 0 && naechsteZeile < tiefe) {

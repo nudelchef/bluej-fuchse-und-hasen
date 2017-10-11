@@ -16,7 +16,7 @@ abstract class Animal
         alter = 0;
         lebendig = true;
         this.feld = feld;
-        setzeLocation(location);
+        setLocation(location);
     }
     
     

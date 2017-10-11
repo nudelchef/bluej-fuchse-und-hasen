@@ -29,8 +29,8 @@ public class Location
     {
         if(obj instanceof Location) {
             Location andereLocation = (Location) obj;
-            return zeile == andereLocation.gibZeile()
-                && spalte == andereLocation.gibSpalte();
+            return x == andereLocation.getX()
+                && y == andereLocation.getY();
         }
         else {
             return false;

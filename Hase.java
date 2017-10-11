@@ -60,7 +60,7 @@ public class Hase extends Animal
             // nur in das nächste Feld setzen, wenn eine Location frei ist
             Location neueLocation = feld.freieNachbarlocation(location);
             if(neueLocation != null) {
-                setzeLocation(neueLocation);
+                setLocation(neueLocation);
             }
             else {
                 // Überpopulation 

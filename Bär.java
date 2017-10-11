@@ -107,7 +107,7 @@ public class Bär extends Animal
             }
             // Ist Bewegung möglich?
             if(neueLocation != null) {
-                setzeLocation(neueLocation);
+                setLocation(neueLocation);
             }
             else {
                 // Überpopulation
