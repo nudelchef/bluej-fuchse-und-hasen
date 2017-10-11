@@ -53,10 +53,10 @@ public class Hase extends Animal
         alterErhoehen();        
     }
     
-    public void laufe(List<Hase> neueHasen)
+    public void laufe(List<Animal> animals)
     {
         if(lebendig) {
-            gebaereNachwuchs(neueHasen);
+            gebaereNachwuchs(animals);
             // nur in das nächste Feld setzen, wenn eine Location frei ist
             Location neueLocation = feld.freieNachbarlocation(location);
             if(neueLocation != null) {
@@ -86,7 +86,7 @@ public class Hase extends Animal
      * Neugeborene kommen in freie Nachbarlocationen.
      * @param neueHasen Liste, in die neugeborene Hasen eingetragen werden.
      */
-    private void gebaereNachwuchs(List<Hase> neueHasen)
+    private void gebaereNachwuchs(List<Animal> animals)
     {
         // Neugeborene kommen in freie Nachbarlocationen.
         // Freie Nachbarlocationen abfragen.
@@ -95,7 +95,7 @@ public class Hase extends Animal
         for(int b = 0; b < geburten && frei.size() > 0; b++) {
             Location pos = frei.remove(0);
             Hase jung = new Hase(false, feld, pos);
-            neueHasen.add(jung);
+            animals.add(jung);
         }
     }
 

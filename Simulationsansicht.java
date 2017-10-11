@@ -17,6 +17,7 @@ import java.util.Map;
  */
 public class Simulationsansicht extends JFrame
 {
+    
     // Die Farbe für leere Positionen
     private static final Color LEER_FARBE = Color.white;
 
@@ -33,19 +34,22 @@ public class Simulationsansicht extends JFrame
     // Ein Statistik-Objekt zur Berechnung und Speicherung
     // von Simulationsdaten
     private FeldStatistik stats;
-
+    
+    private Simulator sim;
+    
     /**
      * Erzeuge eine Ansicht mit der gegebenen Breite und Höhe.
      * @param hoehe Die Höhe der Simulation.
      * @param breite Die Breite der Simulation.
      */
-    public Simulationsansicht(int hoehe, int breite)
+    public Simulationsansicht(int hoehe, int breite, Simulator sim)
     {
+        this.sim = sim;
         stats = new FeldStatistik();
         farben = new LinkedHashMap<Class, Color>();
 
         setTitle("Simulation von Füchsen und Hasen");
-        
+        addKeyListener(new AL());
         
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
@@ -62,6 +66,28 @@ public class Simulationsansicht extends JFrame
         inhalt.add(population, BorderLayout.SOUTH);
         pack();
         setVisible(true);
+    }
+    
+     //Controls
+    public class AL extends KeyAdapter {
+
+        @Override
+        public void keyPressed(KeyEvent event) {
+            int keyCode = event.getKeyCode();
+            if (keyCode == event.VK_A)
+            {
+                sim.simuliereEinenSchritt();
+            }
+        }
+
+        @Override
+        public void keyReleased(KeyEvent event) {
+            int keyCode = event.getKeyCode();
+            if (keyCode == event.VK_A)
+            {
+                
+            }
+        }
     }
     
     /**
@@ -214,12 +240,12 @@ public class Simulationsansicht extends JFrame
             if(feldImage != null) {
                 Dimension aktuelleGroesse = getSize();
                 if(groesse.equals(aktuelleGroesse)) {
-                	g.drawImage(feldImage, 0, 0, null);
+                    g.drawImage(feldImage, 0, 0, null);
                 }
                 else {
                     // Größe des aktuellen Images anpassen.
                     g.drawImage(feldImage, 0, 0, aktuelleGroesse.width,
-                    		    aktuelleGroesse.height, null);
+                                aktuelleGroesse.height, null);
                 }
             }
         }

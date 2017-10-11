@@ -20,18 +20,16 @@ public class Simulator
     private static final int STANDARD_TIEFE = 100;
     // Die Wahrscheinlichkeit für die Geburt eines Fuchses an
     // einer beliebigen Location im Feld.
-    private static final double FUCHSGEBURT_WAHRSCHEINLICH = 0.02;
+    private static final double FUCHSGEBURT_WAHRSCHEINLICH = 0.03;
     // Die Wahrscheinlichkeit für die Geburt eines Hasen an
     // einer beliebigen Location im Feld.
-    private static final double HASENGEBURT_WAHRSCHEINLICH = 0.08;    
+    private static final double HASENGEBURT_WAHRSCHEINLICH = 0.06;    
     // Die Wahrscheinlichkeit für die Geburt eines Bären an
     // einer beliebigen Location im Feld.
     private static final double BÄRENGEBURT_WAHRSCHEINLICH = 0.01;    
 
     // Listen der Tiere im Feld. Getrennte Listen vereinfachen das Iterieren.
-    private List<Hase> hasen;
-    private List<Fuchs> fuechse;
-    private List<Bär> bären;
+    private List<Animal> animals;
     // Der aktuelle Zustand des Feldes
     private Feld feld;
     // Der aktuelle Schritt der Simulation
@@ -45,6 +43,8 @@ public class Simulator
     public Simulator()
     {
         this(STANDARD_TIEFE, STANDARD_BREITE);
+        
+       // simuliere(1000);
     }
       
     /**
@@ -60,13 +60,11 @@ public class Simulator
             tiefe = STANDARD_TIEFE;
             breite = STANDARD_BREITE;
         }
-        hasen = new ArrayList<Hase>();
-        fuechse = new ArrayList<Fuchs>();
-        bären = new ArrayList<Bär>();
+        animals = new ArrayList<Animal>();
         feld = new Feld(tiefe, breite);
 
         // Eine Ansicht der Zustände aller Locationen im Feld erzeugen.
-        ansicht = new Simulationsansicht(tiefe, breite);
+        ansicht = new Simulationsansicht(tiefe, breite, this);
         ansicht.setzeFarbe(Fuchs.class, Color.blue);
         ansicht.setzeFarbe(Hase.class, Color.orange);
         ansicht.setzeFarbe(Bär.class, Color.DARK_GRAY);
@@ -106,46 +104,40 @@ public class Simulator
     {
         schritt++;
         
-        // Platz für neugeborene Hasen anlegen.
-        List<Hase> neueHasen = new ArrayList<Hase>();
-        // Alle Hasen agieren lassen.
-        for(Iterator<Hase> iter = hasen.iterator(); iter.hasNext(); ) {
-            Hase hase = iter.next();
-            hase.update();
-            hase.laufe(neueHasen);
-            if(!hase.istLebendig()) {
-                iter.remove();
+        List<Animal> newAnimals = new ArrayList<Animal>();
+        
+        for (int i = 0 ; i < animals.size(); i++)
+        
+        {
+            if (animals.get(i) instanceof Hase)
+            {
+                Hase hase = (Hase) animals.get(i);
+                hase.update();
+                hase.laufe(newAnimals);
+                if(!hase.istLebendig()) {
+                    animals.remove(i);
+                }
+            }else if(animals.get(i) instanceof Bär)
+            {
+                Bär bär = (Bär) animals.get(i);
+                bär.update();
+                bär.jage(newAnimals);
+                if(!bär.istLebendig()) {
+                    animals.remove(i);
+                }
+            }else if (animals.get(i) instanceof Fuchs)
+            {
+                Fuchs fuchs = (Fuchs) animals.get(i);
+                fuchs.update();
+                fuchs.jage(newAnimals);
+                if(!fuchs.istLebendig()) {
+                    animals.remove(i);
+                }
             }
+            
         }
         
-       
-        // Platz für neugeborene Füchse anlegen.
-        List<Bär> neueBären = new ArrayList<Bär>();
-        // Alle Füchse agieren lassen.
-        for(Iterator<Bär> iter = bären.iterator(); iter.hasNext(); ) {
-            Bär bär = iter.next();
-            bär.update();
-            // / TODO / bär.jage(neueBären);
-            if(!bär.istLebendig()) {
-                iter.remove();
-            }
-        }
-        
-        // Platz für neugeborene Füchse anlegen.
-        List<Fuchs> neueFuechse = new ArrayList<Fuchs>();
-        // Alle Füchse agieren lassen.
-        for(Iterator<Fuchs> iter = fuechse.iterator(); iter.hasNext(); ) {
-            Fuchs fuchs = iter.next();
-            fuchs.update();
-            fuchs.jage(neueFuechse);
-            if(!fuchs.istLebendig()) {
-                iter.remove();
-            }
-        }
-
-        // Neu geborene Füchse und Hasen in die Hauptlisten einfügen.
-        hasen.addAll(neueHasen);
-        fuechse.addAll(neueFuechse);
+        animals.addAll(newAnimals);
 
         ansicht.zeigeStatus(schritt, feld);
     }
@@ -156,9 +148,7 @@ public class Simulator
     public void zuruecksetzen()
     {
         schritt = 0;
-        hasen.clear();
-        fuechse.clear();
-        bären.clear();
+        animals.clear();
         bevoelkere();
         
         // Zeige den Startzustand in der Ansicht.
@@ -177,17 +167,17 @@ public class Simulator
                 if(rand.nextDouble() <= FUCHSGEBURT_WAHRSCHEINLICH) {
                     Location location = new Location(zeile, spalte); 
                     Fuchs fuchs = new Fuchs(true, feld, location);
-                    fuechse.add(fuchs);
+                    animals.add(fuchs);
                 }
                 else if(rand.nextDouble() <= HASENGEBURT_WAHRSCHEINLICH) {
                     Location location = new Location(zeile, spalte); 
                     Hase hase = new Hase(true, feld, location);
-                    hasen.add(hase);
+                    animals.add(hase);
                 }
                 else if(rand.nextDouble() <= BÄRENGEBURT_WAHRSCHEINLICH) {
                     Location location = new Location(zeile, spalte); 
                     Bär bär = new Bär(true, feld, location);
-                    bären.add(bär);
+                    animals.add(bär);
                 }
                 // ansonsten die Location leer lassen
             }

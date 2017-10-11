@@ -11,13 +11,14 @@ public class Bär extends Animal
     // Das Höchstalter eines Fuchses.
     private static final int MAX_ALTER = 300;
     // Die Wahrscheinlichkeit, mit der ein Fuchs Nachwuchs gebärt.
-    private static final double GEBAER_WAHRSCHEINLICHKEIT = 0.35;
+    private static final double GEBAER_WAHRSCHEINLICHKEIT = 0.85;
     // Die maximale Größe eines Wurfes (Anzahl der Jungen).
-    private static final int MAX_WURFGROESSE = 5;
+    private static final int MAX_WURFGROESSE = 2;
     // Der Nährwert eines einzelnen Hasen. Letztendlich ist
     // dies die Anzahl der Schritte, die ein Fuchs bis zur
     //nächsten Mahlzeit laufen kann.
-    private static final int FÜCHSE_NAEHRWERT = 7;
+    private static final int FÜCHSE_NAEHRWERT = 20;
+    private static final int HASEN_NAEHRWERT = 20;
     // Ein gemeinsamer Zufallsgenerator, der die Geburten steuert.
     private static final Random rand = Zufallssteuerung.gibZufallsgenerator();
     
@@ -26,16 +27,33 @@ public class Bär extends Animal
     public Bär(boolean zufaelligesAlter, Feld feld, Location location)
     {
         super(zufaelligesAlter,feld,location);
-        if(zufaelligesAlter) 
-        {
+        if(zufaelligesAlter) {
             alter = rand.nextInt(MAX_ALTER);
+            futterLevel = rand.nextInt(FÜCHSE_NAEHRWERT);
+        }
+        else {
+            // Alter bleibt 0
+            futterLevel = FÜCHSE_NAEHRWERT;
         }
     }
     
     
     public void update()
     {
-        alterErhoehen();        
+        alterErhoehen();     
+        hungerVergroessern();     
+    }
+    
+    /**
+     * Vergrößere den Hunger dieses Bären. Dies kann zu seinem
+     * Tode führen.
+     */
+    private void hungerVergroessern()
+    {
+        futterLevel--;
+        if(futterLevel <= 0) {
+            sterben();
+        }
     }
     
     public void alterErhoehen()
@@ -61,7 +79,7 @@ public class Bär extends Animal
      * Neugeborene kommen in freie Nachbarlocationen.
      * @param neueFuechse Liste, in die neugeborene Füchse eingetragen werden.
      */
-    private void gebaereNachwuchs(List<Bär> neueBären)
+    private void gebaereNachwuchs(List<Animal> animals)
     {
         // Neugeborene kommen in freie Nachbarlocationen.
         // Freie Nachbarlocationen abfragen.
@@ -71,7 +89,7 @@ public class Bär extends Animal
         {
             Location pos = frei.remove(0);
             Bär jung = new Bär(false, feld, pos);
-            neueBären.add(jung);
+            animals.add(jung);
         }
     }    
        
@@ -95,10 +113,10 @@ public class Bär extends Animal
      * an Altersschwäche.
      * @param neueFuechse Liste, in die neue Füchse eingefügt werden.
      */
-    public void jage(List<Bär> neueBären)
+    public void jage(List<Animal> animals)
     {
         if(lebendig) {
-            gebaereNachwuchs(neueBären);
+            gebaereNachwuchs(animals);
             // In die Richtung bewegen, in der Futter gefunden wurde.
             Location neueLocation = findeNahrung(location);
             if(neueLocation == null) {  
@@ -135,6 +153,13 @@ public class Bär extends Animal
                 if(fuchs.istLebendig()) { 
                     fuchs.sterben();
                     futterLevel = FÜCHSE_NAEHRWERT;
+                    return pos;
+                }
+            }else if(tier instanceof Hase) {
+                Hase hase = (Hase) tier;
+                if(hase.istLebendig()) { 
+                    hase.sterben();
+                    futterLevel = HASEN_NAEHRWERT;
                     return pos;
                 }
             }

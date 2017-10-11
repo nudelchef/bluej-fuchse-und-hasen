@@ -62,10 +62,10 @@ public class Fuchs extends Animal
      * an Altersschwäche.
      * @param neueFuechse Liste, in die neue Füchse eingefügt werden.
      */
-    public void jage(List<Fuchs> neueFuechse)
+    public void jage(List<Animal> animals)
     {
         if(lebendig) {
-            gebaereNachwuchs(neueFuechse);
+            gebaereNachwuchs(animals);
             // In die Richtung bewegen, in der Futter gefunden wurde.
             Location neueLocation = findeNahrung(location);
             if(neueLocation == null) {  
@@ -145,7 +145,7 @@ public class Fuchs extends Animal
      * Neugeborene kommen in freie Nachbarlocationen.
      * @param neueFuechse Liste, in die neugeborene Füchse eingetragen werden.
      */
-    private void gebaereNachwuchs(List<Fuchs> neueFuechse)
+    private void gebaereNachwuchs(List<Animal> animals)
     {
         // Neugeborene kommen in freie Nachbarlocationen.
         // Freie Nachbarlocationen abfragen.
@@ -154,7 +154,7 @@ public class Fuchs extends Animal
         for(int b = 0; b < geburten && frei.size() > 0; b++) {
             Location pos = frei.remove(0);
             Fuchs jung = new Fuchs(false, feld, pos);
-            neueFuechse.add(jung);
+            animals.add(jung);
         }
     }
         
