@@ -109,28 +109,12 @@ public class Simulator
         for (int i = 0 ; i < animals.size(); i++)
         
         {
-            if (animals.get(i) instanceof Hase)
+            
+            Animal animal = animals.get(i);
+            if (animal!=null) 
             {
-                Hase hase = (Hase) animals.get(i);
-                hase.update();
-                hase.laufe(newAnimals);
-                if(!hase.istLebendig()) {
-                    animals.remove(i);
-                }
-            }else if(animals.get(i) instanceof Bär)
-            {
-                Bär bär = (Bär) animals.get(i);
-                bär.update();
-                bär.jage(newAnimals);
-                if(!bär.istLebendig()) {
-                    animals.remove(i);
-                }
-            }else if (animals.get(i) instanceof Fuchs)
-            {
-                Fuchs fuchs = (Fuchs) animals.get(i);
-                fuchs.update();
-                fuchs.jage(newAnimals);
-                if(!fuchs.istLebendig()) {
+                animal.update(newAnimals);
+                if(!animal.istLebendig()) {
                     animals.remove(i);
                 }
             }
@@ -182,5 +166,8 @@ public class Simulator
                 // ansonsten die Location leer lassen
             }
         }
+        
+        
+        System.out.println(animals.size());
     }
 }

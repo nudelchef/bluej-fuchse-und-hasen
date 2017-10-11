@@ -1,151 +1,37 @@
 import java.util.List;
-import java.util.Iterator;
-import java.util.Random;
 
-/**
- * Ein simples Modell eines Fuchses.
- * Füchse altern, bewegen sich, fressen Hasen und sterben.
- * 
- * @author David J. Barnes und Michael Kölling
- * @version 2008.03.30
- */
 public class Fuchs extends Animal
 {
-    // Eigenschaften aller Füchse (statische Datenfelder)
-    
-    // Das Alter, in dem ein Fuchs gebärfähig wird.
-    private static final int GEBAER_ALTER = 10;
-    // Das Höchstalter eines Fuchses.
-    private static final int MAX_ALTER = 150;
-    // Die Wahrscheinlichkeit, mit der ein Fuchs Nachwuchs gebärt.
-    private static final double GEBAER_WAHRSCHEINLICHKEIT = 0.35;
-    // Die maximale Größe eines Wurfes (Anzahl der Jungen).
-    private static final int MAX_WURFGROESSE = 5;
-    // Der Nährwert eines einzelnen Hasen. Letztendlich ist
-    // dies die Anzahl der Schritte, die ein Fuchs bis zur
-    //nächsten Mahlzeit laufen kann.
     private static final int HASEN_NAEHRWERT = 7;
-    // Ein gemeinsamer Zufallsgenerator, der die Geburten steuert.
-    private static final Random rand = Zufallssteuerung.gibZufallsgenerator();
     
-    // Individuelle Eigenschaften (Instanzfelder).
-
-    // Der Futter-Level, der durch das Fressen von Hasen erhöht wird.
-    private int futterLevel;
-
-    /**
-     * Erzeuge einen Fuchs. Ein Fuchs wird entweder neu geboren
-     * (Alter 0 Jahre und nicht hungrig) oder kann mit einem zufälligen Alter
-     * und zufälligem Hungergefühl erzeugt werden.
-     * 
-     * @param zufaelligesAlter falls true, hat der neue Fuchs ein 
-     *        zufälliges Alter und einen zufälligen Futter-Level.
-     * @param feld Das aktuelle belegte Feld
-     * @param location Die Location im Feld
-     */
     public Fuchs(boolean zufaelligesAlter, Feld feld, Location location)
     {
         super(zufaelligesAlter,feld,location);
+        
+        setMaxAlter(150);
+        setGebaerAlter(10);
+        setGebaerWahrscheinlichkeit(0.35);
+        setMaxWurfgroesse(5);
+        
+        setNaehrwert(40);
+        
+        addNahrung(new Hase(false,null,null));
+        
         if(zufaelligesAlter) {
-            alter = rand.nextInt(MAX_ALTER);
-            futterLevel = rand.nextInt(HASEN_NAEHRWERT);
+            alter = rand.nextInt(getMaxAlter());
         }
-        else {
-            // Alter bleibt 0
-            futterLevel = HASEN_NAEHRWERT;
-        }
-    }
-    
-    /**
-     * Das ist was ein Fuchs die meiste Zeit tut: er jagt Hasen.
-     * Dabei kann er Nachwuchs gebären, vor Hunger sterben oder
-     * an Altersschwäche.
-     * @param neueFuechse Liste, in die neue Füchse eingefügt werden.
-     */
-    public void jage(List<Animal> animals)
-    {
-        if(lebendig) {
-            gebaereNachwuchs(animals);
-            // In die Richtung bewegen, in der Futter gefunden wurde.
-            Location neueLocation = findeNahrung(location);
-            if(neueLocation == null) {  
-                // kein Futter - zufällig bewegen
-                neueLocation = feld.freieNachbarlocation(location);
-            }
-            // Ist Bewegung möglich?
-            if(neueLocation != null) {
-                setLocation(neueLocation);
-            }
-            else {
-                // Überpopulation
-                sterben();
-            }
-        }
-    }
-    
-    
-    public void update()
-    {
-        alterErhoehen();
-        hungerVergroessern();       
-    }
-    
-    /**
-     * Erhöhe das Alter dieses Fuchses. Dies kann zu seinem
-     * Tod führen.
-     */
-    public void alterErhoehen()
-    {
-        alter++;
-        if(alter > MAX_ALTER) {
-            sterben();
-        }
-    }
-    
-    /**
-     * Vergrößere den Hunger dieses Fuchses. Dies kann zu seinem
-     * Tode führen.
-     */
-    private void hungerVergroessern()
-    {
-        futterLevel--;
-        if(futterLevel <= 0) {
-            sterben();
-        }
-    }
-    
-    /**
-     * Suche nach Nahrung (Hasen) in den Nachbarlocationen.
-     * Es wird nur der erste lebendige Hase gefressen.
-     * @param location die Location, an der sich der Fuchs befindet.
-     * @return die Location mit Nahrung, oder null, wenn keine vorhanden.
-     */
-    private Location findeNahrung(Location location)
-    {
-        List<Location> nachbarLocationen = 
-                               feld.nachbarlocationen(location);
-        Iterator<Location> iter = nachbarLocationen.iterator();
-        while(iter.hasNext()) {
-            Location pos = iter.next();
-            Object tier = feld.gibObjektAn(pos);
-            if(tier instanceof Hase) {
-                Hase hase = (Hase) tier;
-                if(hase.istLebendig()) { 
-                    hase.sterben();
-                    futterLevel = HASEN_NAEHRWERT;
-                    return pos;
-                }
-            }
-        }
-        return null;
     }
         
-    /**
-     * Prüfe, ob dieser Fuchs in diesem Schritt gebären kann.
-     * Neugeborene kommen in freie Nachbarlocationen.
-     * @param neueFuechse Liste, in die neugeborene Füchse eingetragen werden.
-     */
-    private void gebaereNachwuchs(List<Animal> animals)
+    
+    public void update(List<Animal> animals)
+    {
+        alterErhoehen();
+        hungerVergroessern();  
+        move(animals);
+    }
+    
+    
+    public void gebaereNachwuchs(List<Animal> animals)
     {
         // Neugeborene kommen in freie Nachbarlocationen.
         // Freie Nachbarlocationen abfragen.
@@ -158,26 +44,6 @@ public class Fuchs extends Animal
         }
     }
         
-    /**
-     * Erzeuge eine Zahl für die Wurfgroesse, wenn der Fuchs
-     * gebaeren kann.
-     * @return  Wurfgroesse (kann Null sein).
-     */
-    private int traechtig()
-    {
-        int wurfgroesse = 0;
-        if(kannGebaeren() && rand.nextDouble() <= GEBAER_WAHRSCHEINLICHKEIT) {
-            wurfgroesse = rand.nextInt(MAX_WURFGROESSE) + 1;
-        }
-        return wurfgroesse;
-    }
-    /**
-     * Ein Fuchs kann gebären, wenn er das gebärfähige
-     * Alter erreicht hat.
-     */
-    public boolean kannGebaeren()
-    {
-        return alter >= GEBAER_ALTER;
-    }
+    
     
 }

@@ -132,7 +132,7 @@ public class Simulationsansicht extends JFrame
             
         for(int zeile = 0; zeile < feld.gibTiefe(); zeile++) {
             for(int spalte = 0; spalte < feld.gibBreite(); spalte++) {
-                Object tier = feld.gibObjektAn(zeile, spalte);
+                Animal tier = feld.gibObjektAn(zeile, spalte);
                 if(tier != null) {
                     stats.erhoeheZaehler(tier.getClass());
                     feldansicht.zeichneMarkierung(spalte, zeile, gibFarbe(tier.getClass()));

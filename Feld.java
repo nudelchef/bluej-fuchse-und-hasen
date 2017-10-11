@@ -18,7 +18,7 @@ public class Feld
     // Die Tiefe und die Breite des Feldes
     private int tiefe, breite;
     // Speicher für die Tiere
-    private Object[][] feld;
+    private Animal[][] feld;
 
     /**
      * Erzeuge ein Feld mit den angegebenen Dimensionen.
@@ -29,7 +29,7 @@ public class Feld
     {
         this.tiefe = tiefe;
         this.breite = breite;
-        feld = new Object[tiefe][breite];
+        feld = new Animal[tiefe][breite];
     }
     
     /**
@@ -61,7 +61,7 @@ public class Feld
      * @param zeile die Zeilenkoordinate der Location.
      * @param spalte die Spaltenkoordinate der Location.
      */
-    public void platziere(Object tier, int zeile, int spalte)
+    public void platziere(Animal tier, int zeile, int spalte)
     {
         platziere(tier, new Location(zeile, spalte));
     }
@@ -73,7 +73,7 @@ public class Feld
      * @param tier das Tier, das platziert werden soll.
      * @param location die Location, an der das Tier platziert werden soll.
      */
-    public void platziere(Object tier, Location location)
+    public void platziere(Animal tier, Location location)
     {
         feld[location.getX()][location.getY()] = tier;
     }
@@ -84,7 +84,7 @@ public class Feld
      * @return das Tier an der angegebenen Location oder null, wenn
      *         dort kein Tier eingetragen ist.
      */
-    public Object gibObjektAn(Location location)
+    public Animal gibObjektAn(Location location)
     {
         return gibObjektAn(location.getX(), location.getY());
     }
@@ -96,7 +96,7 @@ public class Feld
      * @return das Tier an der angegebenen Location oder null, wenn
      *         dort kein Tier eingetragen ist.
      */
-    public Object gibObjektAn(int zeile, int spalte)
+    public Animal gibObjektAn(int zeile, int spalte)
     {
         return feld[zeile][spalte];
     }
