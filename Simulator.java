@@ -20,13 +20,13 @@ public class Simulator
     private static final int STANDARD_TIEFE = 100;
     // Die Wahrscheinlichkeit für die Geburt eines Fuchses an
     // einer beliebigen Location im Feld.
-    private static final double FUCHSGEBURT_WAHRSCHEINLICH = 0.11;
+    private static final double FUCHSGEBURT_WAHRSCHEINLICH = 0.02;
     // Die Wahrscheinlichkeit für die Geburt eines Hasen an
     // einer beliebigen Location im Feld.
-    private static final double HASENGEBURT_WAHRSCHEINLICH = 0.06;    
+    private static final double HASENGEBURT_WAHRSCHEINLICH = 0.08;    
     // Die Wahrscheinlichkeit für die Geburt eines Bären an
     // einer beliebigen Location im Feld.
-    private static final double BÄRENGEBURT_WAHRSCHEINLICH = 0.01;    
+    private static final double BÄRENGEBURT_WAHRSCHEINLICH = 0.005;    
 
     // Listen der Tiere im Feld. Getrennte Listen vereinfachen das Iterieren.
     private List<Animal> animals;

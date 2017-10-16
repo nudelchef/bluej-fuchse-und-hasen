@@ -16,8 +16,8 @@ public class Hase extends Animal
         
         setMaxAlter(40);
         setGebaerAlter(5);
-        setGebaerWahrscheinlichkeit(0.15);
-        setMaxWurfgroesse(4);
+        setGebaerWahrscheinlichkeit(0.25);
+        setMaxWurfgroesse(6);
         
         setNaehrwert(7);
         

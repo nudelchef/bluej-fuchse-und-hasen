@@ -12,6 +12,7 @@ abstract class Animal
     public boolean lebendig;
     public Location location;
     public Feld feld;
+    public int sättigung;
     
     public int futterLevel;
     
@@ -34,6 +35,7 @@ abstract class Animal
         setLocation(location);
         nahrung = new ArrayList<Class>();
         futterLevel = 10;
+        sättigung = 20;
         color = new Color(0,0,0);
     }
     
@@ -65,7 +67,17 @@ abstract class Animal
             gebaereNachwuchs(animals);
             // In die Richtung bewegen, in der Futter gefunden wurde.
             
-            Location neueLocation = (nahrung.size() > 0) ? findeNahrung(location) : feld.freieNachbarlocation(location);
+            Location neueLocation = null; 
+            
+            if (nahrung.size() > 0)
+            {
+                neueLocation = findeNahrung(location);
+            }
+            
+            if (neueLocation == null)
+            {
+                neueLocation = feld.freieNachbarlocation(location);
+            }
             
             if(neueLocation != null) {
                 setLocation(neueLocation);
@@ -79,23 +91,27 @@ abstract class Animal
     }
     public Location findeNahrung(Location location)
     {
-        List<Location> nachbarLocationen = 
-                               feld.nachbarlocationen(location);
-        Iterator<Location> iter = nachbarLocationen.iterator();
-        while(iter.hasNext()) {
-            Location pos = iter.next();
-            Animal tier = feld.gibObjektAn(pos);
-            
-            if (tier !=null)
+        if (futterLevel <= sättigung)
+        {
+            List<Location> nachbarLocationen = 
+                                   feld.nachbarlocationen(location);
+            for (int ix = 0; ix < nachbarLocationen.size() ; ix++)
             {
-                for (int i = 0 ; i < nahrung.size();i++)
+                Location pos = nachbarLocationen.get(ix);
+                Animal tier = feld.gibObjektAn(pos);
+                
+                if (tier !=null)
                 {
-                    if (tier.getClass().equals(nahrung.get(i)))
-                    {                     
-                        if(tier.istLebendig()) { 
-                            tier.sterben();
-                            futterLevel = tier.getNaehrwert();
-                            return pos;
+                    for (int i = 0 ; i < nahrung.size();i++)
+                    {
+                        if (tier.getClass().equals(nahrung.get(i)))
+                        {          
+                            if(tier.istLebendig()) { 
+                                tier.sterben();
+                                futterLevel += tier.getNaehrwert();
+                                return pos;
+                            }
+                            break;
                         }
                     }
                 }
@@ -176,6 +192,16 @@ abstract class Animal
     public int getMaxAlter()
     {
         return MAX_ALTER;
+    }
+
+    public void setSättigung(int value)
+    {
+        this.sättigung = value;
+    }
+
+    public int getSättigung()
+    {
+        return sättigung;
     }
     
     public void setGebaerAlter(int value)

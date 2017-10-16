@@ -9,17 +9,18 @@ public class Bär extends Animal
     {
         super(zufaelligesAlter,feld,location);
         
-        setMaxAlter(1000);
-        setGebaerAlter(900);
-        setGebaerWahrscheinlichkeit(1.00);
-        setMaxWurfgroesse(2);
+        setMaxAlter(200);
+        setGebaerAlter(100);
+        setGebaerWahrscheinlichkeit(0.2);
+        setMaxWurfgroesse(1);
         
-        setNaehrwert(580);
+        setSättigung(50);
+        
+        setNaehrwert(100);
         
         setColor(new Color(127,25,0));
         
         addNahrung(Fuchs.class);
-        addNahrung(Hase.class);
         
         
         if(zufaelligesAlter) {

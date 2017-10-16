@@ -3,18 +3,18 @@ import java.awt.*;
 
 public class Fuchs extends Animal
 {
-    private static final int HASEN_NAEHRWERT = 7;
-    
     public Fuchs(boolean zufaelligesAlter, Feld feld, Location location)
     {
         super(zufaelligesAlter,feld,location);
         
         setMaxAlter(150);
         setGebaerAlter(10);
-        setGebaerWahrscheinlichkeit(0.35);
-        setMaxWurfgroesse(5);
+        setGebaerWahrscheinlichkeit(0.15);
+        setMaxWurfgroesse(2);
         
-        setNaehrwert(40);
+        setSättigung(14);
+        
+        setNaehrwert(50);
         
         setColor(Color.orange);
         
