@@ -2,6 +2,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
+import java.awt.*;
 
 abstract class Animal
 { 
@@ -20,23 +21,26 @@ abstract class Animal
     private int MAX_WURFGROESSE;
     
     private int NAEHRWERT;
+    private Color color;
     
-    private List<Animal> nahrung;
+    private List<Class> nahrung;
     
     public Animal(boolean zufaelligesAlter, Feld feld, Location location)
     {
+        this.feld = feld;
+        
         alter = 0;
         lebendig = true;
-        this.feld = feld;
         setLocation(location);
-        nahrung = new ArrayList<Animal>();
+        nahrung = new ArrayList<Class>();
         futterLevel = 10;
+        color = new Color(0,0,0);
     }
     
     public abstract void update(List<Animal> animals);
     
     public abstract void gebaereNachwuchs(List<Animal> animals);
-    
+        
     public void sterben()
     {
         lebendig = false;
@@ -82,14 +86,17 @@ abstract class Animal
             Location pos = iter.next();
             Animal tier = feld.gibObjektAn(pos);
             
-            for (int i = 0 ; i < nahrung.size();i++)
+            if (tier !=null)
             {
-                if (tier.getClass().equals(nahrung.get(i).getClass()))
-                {                     
-                    if(tier.istLebendig()) { 
-                        tier.sterben();
-                        futterLevel = tier.getNaehrwert();
-                        return pos;
+                for (int i = 0 ; i < nahrung.size();i++)
+                {
+                    if (tier.getClass().equals(nahrung.get(i)))
+                    {                     
+                        if(tier.istLebendig()) { 
+                            tier.sterben();
+                            futterLevel = tier.getNaehrwert();
+                            return pos;
+                        }
                     }
                 }
             }
@@ -114,9 +121,9 @@ abstract class Animal
         }
     }
     
-    public void addNahrung(Animal animal)
+    public void addNahrung(Class food)
     {
-        nahrung.add(animal);
+        nahrung.add(food);
     }
     
     
@@ -131,13 +138,27 @@ abstract class Animal
     }
 
     
+    public Color setColor(Color color)
+    {
+        this.color = color;
+        return color;
+    }
+    
+    public Color getColor()
+    {
+        return color;
+    }
     
     public void setLocation(Location newLocation)
     {
-        if(location != null) 
+        if (newLocation !=null)
         {
-            feld.raeumen(location);
-            location = newLocation;
+            if(location != null) 
+            {
+                feld.raeumen(location);
+            }
+            
+            this.location = newLocation;
             feld.platziere(this, newLocation);
         }
     }

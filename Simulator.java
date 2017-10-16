@@ -20,7 +20,7 @@ public class Simulator
     private static final int STANDARD_TIEFE = 100;
     // Die Wahrscheinlichkeit für die Geburt eines Fuchses an
     // einer beliebigen Location im Feld.
-    private static final double FUCHSGEBURT_WAHRSCHEINLICH = 0.03;
+    private static final double FUCHSGEBURT_WAHRSCHEINLICH = 0.11;
     // Die Wahrscheinlichkeit für die Geburt eines Hasen an
     // einer beliebigen Location im Feld.
     private static final double HASENGEBURT_WAHRSCHEINLICH = 0.06;    
@@ -65,9 +65,6 @@ public class Simulator
 
         // Eine Ansicht der Zustände aller Locationen im Feld erzeugen.
         ansicht = new Simulationsansicht(tiefe, breite, this);
-        ansicht.setzeFarbe(Fuchs.class, Color.blue);
-        ansicht.setzeFarbe(Hase.class, Color.orange);
-        ansicht.setzeFarbe(Bär.class, Color.DARK_GRAY);
         
         // Einen gültigen Startzustand einnehmen.
         zuruecksetzen();
@@ -166,8 +163,6 @@ public class Simulator
                 // ansonsten die Location leer lassen
             }
         }
-        
-        
-        System.out.println(animals.size());
+                
     }
 }

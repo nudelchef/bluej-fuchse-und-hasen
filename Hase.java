@@ -1,4 +1,5 @@
 import java.util.List;
+import java.awt.*;
 
 /**
  * Ein einfaches Modell eines Hasen.
@@ -19,6 +20,8 @@ public class Hase extends Animal
         setMaxWurfgroesse(4);
         
         setNaehrwert(7);
+        
+        setColor(new Color(220,220,220));
         
         if(zufaelligesAlter) {
             alter = rand.nextInt(getMaxAlter());

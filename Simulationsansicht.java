@@ -29,8 +29,6 @@ public class Simulationsansicht extends JFrame
     private JLabel schrittLabel, population;
     private Feldansicht feldansicht;
     
-    // Eine Map für die Farben der Simulationsteilnehmer
-    private Map<Class, Color> farben;
     // Ein Statistik-Objekt zur Berechnung und Speicherung
     // von Simulationsdaten
     private FeldStatistik stats;
@@ -46,7 +44,6 @@ public class Simulationsansicht extends JFrame
     {
         this.sim = sim;
         stats = new FeldStatistik();
-        farben = new LinkedHashMap<Class, Color>();
 
         setTitle("Simulation von Füchsen und Hasen");
         addKeyListener(new AL());
@@ -90,30 +87,6 @@ public class Simulationsansicht extends JFrame
         }
     }
     
-    /**
-     * Definiere eine Farbe für die gegebene Tierklasse.
-     * @param tierklasse Das Klassenobjekt der Tierklasse.
-     * @param farbe Die zu benutzende Farbe für die Tierklasse. 
-     */
-    public void setzeFarbe(Class tierklasse, Color farbe)
-    {
-        farben.put(tierklasse, farbe);
-    }
-
-    /**
-     * @return die definierte Farbe für die gegebene Tierklasse.
-     */
-    private Color gibFarbe(Class tierklasse)
-    {
-        Color farbe = farben.get(tierklasse);
-        if(farbe == null) {
-            // für die gegebene Klasse ist keine Farbe definiert
-            return UNDEF_FARBE;
-        }
-        else {
-            return farbe;
-        }
-    }
 
     /**
      * Zeige den aktuellen Zustand des Feldes.
@@ -135,7 +108,7 @@ public class Simulationsansicht extends JFrame
                 Animal tier = feld.gibObjektAn(zeile, spalte);
                 if(tier != null) {
                     stats.erhoeheZaehler(tier.getClass());
-                    feldansicht.zeichneMarkierung(spalte, zeile, gibFarbe(tier.getClass()));
+                    feldansicht.zeichneMarkierung(spalte, zeile, tier.getColor());
                 }
                 else {
                     feldansicht.zeichneMarkierung(spalte, zeile, LEER_FARBE);

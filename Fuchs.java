@@ -1,4 +1,5 @@
 import java.util.List;
+import java.awt.*;
 
 public class Fuchs extends Animal
 {
@@ -15,7 +16,9 @@ public class Fuchs extends Animal
         
         setNaehrwert(40);
         
-        addNahrung(new Hase(false,null,null));
+        setColor(Color.orange);
+        
+        addNahrung(Hase.class);
         
         if(zufaelligesAlter) {
             alter = rand.nextInt(getMaxAlter());

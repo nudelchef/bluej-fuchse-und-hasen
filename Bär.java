@@ -1,4 +1,5 @@
 import java.util.List;
+import java.awt.*;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -8,18 +9,21 @@ public class Bär extends Animal
     {
         super(zufaelligesAlter,feld,location);
         
-        setMaxAlter(300);
-        setGebaerAlter(100);
-        setGebaerWahrscheinlichkeit(0.05);
+        setMaxAlter(1000);
+        setGebaerAlter(900);
+        setGebaerWahrscheinlichkeit(1.00);
         setMaxWurfgroesse(2);
         
-        setNaehrwert(90);
+        setNaehrwert(580);
         
-        addNahrung(new Fuchs(false,null,null));
+        setColor(new Color(127,25,0));
+        
+        addNahrung(Fuchs.class);
+        addNahrung(Hase.class);
         
         
         if(zufaelligesAlter) {
-            alter = rand.nextInt(getMaxAlter());
+            alter = rand.nextInt(getMaxAlter() / 2);
         }
     }
     

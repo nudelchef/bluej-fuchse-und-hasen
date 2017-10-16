@@ -11,15 +11,16 @@ public class Location
     private int x;
     private int y;
 
-    /**
-     * Repräsentiere eine Zeile und eine Spalte.
-     * @param zeile die Zeile.
-     * @param spalte die Spalte.
-     */
     public Location(int x, int y)
     {
         this.x = x;
         this.y = y;
+    }
+    
+    public Location(Location l)
+    {
+        this.x = l.x;
+        this.y = l.y;
     }
     
     /**
