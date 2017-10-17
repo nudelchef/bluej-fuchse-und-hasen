@@ -8,11 +8,11 @@ public class Fuchs extends Animal
         super(zufaelligesAlter,feld,location);
         
         setMaxAlter(150);
-        setGebaerAlter(10);
+        setGebaerAlter(30);
         setGebaerWahrscheinlichkeit(0.15);
-        setMaxWurfgroesse(2);
+        setMaxWurfgroesse(5);
         
-        setSättigung(14);
+        setSättigung(7);
         
         setNaehrwert(50);
         

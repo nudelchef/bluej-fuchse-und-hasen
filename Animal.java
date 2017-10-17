@@ -71,7 +71,7 @@ abstract class Animal
             
             if (nahrung.size() > 0)
             {
-                neueLocation = findeNahrung(location);
+                neueLocation = findeNahrung(location);                
             }
             
             if (neueLocation == null)
@@ -91,7 +91,7 @@ abstract class Animal
     }
     public Location findeNahrung(Location location)
     {
-        if (futterLevel <= sättigung)
+        //if (futterLevel <= sättigung)
         {
             List<Location> nachbarLocationen = 
                                    feld.nachbarlocationen(location);

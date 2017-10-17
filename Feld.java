@@ -167,19 +167,33 @@ public class Feld
         // Die Liste der zurueckzuliefernden Locationen
         List<Location> locationen = new LinkedList<Location>();
         if(location != null) {
-            int zeile = location.getX();
-            int spalte = location.getY();
-            for(int zDiff = -1; zDiff <= 1; zDiff++) {
-                int naechsteZeile = zeile + zDiff;
-                if(naechsteZeile >= 0 && naechsteZeile < tiefe) {
-                    for(int sDiff = -1; sDiff <= 1; sDiff++) {
-                        int naechsteSpalte = spalte + sDiff;
-                        // Ungueltige Locationen und Ausgangslocation ausschliessen.
-                        if(naechsteSpalte >= 0 && naechsteSpalte < breite && (zDiff != 0 || sDiff != 0)) {
-                            locationen.add(new Location(naechsteZeile, naechsteSpalte));
-                        }
+            int x = location.getX();
+            int y = location.getY();
+            for(int xDiff = -1; xDiff <= 1; xDiff++) {
+                int nextX = x + xDiff;
+                
+                for(int yDiff = -1; yDiff <= 1; yDiff++) {
+                    int nextY = y + yDiff;
+                    // Ungueltige Locationen und Ausgangslocation ausschliessen.
+                    
+                    if (nextX >= breite){
+                        nextX = 0;
+                    }else if(nextX < 0)
+                    {
+                        nextX = breite-1;
                     }
+                    
+                    if (nextY >= tiefe){
+                        nextY = 0;
+                    }else if(nextY < 0)
+                    {
+                        nextY = tiefe-1;
+                    }
+                        
+                    locationen.add(new Location(nextX, nextY));
+                    
                 }
+                
             }          
             // Mische die Liste. Verschiedene andere Methoden verlassen sich darauf, 
             // dass die Liste ungeordnet ist.

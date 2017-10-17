@@ -200,7 +200,7 @@ public class Simulationsansicht extends JFrame
         public void zeichneMarkierung(int x, int y, Color farbe)
         {
             g.setColor(farbe);
-            g.fillRect(x * xFaktor, y * yFaktor, xFaktor-1, yFaktor-1);
+            g.fillRect(x * xFaktor, y * yFaktor, xFaktor, yFaktor);
         }
 
         /**

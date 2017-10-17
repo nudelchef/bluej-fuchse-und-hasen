@@ -160,6 +160,13 @@ public class Simulator
                     Bär bär = new Bär(true, feld, location);
                     animals.add(bär);
                 }
+                /*
+                else if(rand.nextDouble() <= BÄRENGEBURT_WAHRSCHEINLICH) {
+                    Location location = new Location(zeile, spalte); 
+                    Walker walker = new Walker(true, feld, location);
+                    animals.add(walker);
+                }
+                */
                 // ansonsten die Location leer lassen
             }
         }
