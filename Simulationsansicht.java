@@ -67,22 +67,12 @@ public class Simulationsansicht extends JFrame
     
      //Controls
     public class AL extends KeyAdapter {
-
         @Override
         public void keyPressed(KeyEvent event) {
             int keyCode = event.getKeyCode();
             if (keyCode == event.VK_A)
             {
                 sim.simuliereEinenSchritt();
-            }
-        }
-
-        @Override
-        public void keyReleased(KeyEvent event) {
-            int keyCode = event.getKeyCode();
-            if (keyCode == event.VK_A)
-            {
-                
             }
         }
     }
