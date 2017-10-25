@@ -64,7 +64,7 @@ public class Simulator
         feld = new Feld(tiefe, breite);
 
         // Eine Ansicht der Zustände aller Locationen im Feld erzeugen.
-        ansicht = new Simulationsansicht(tiefe, breite, this);
+        ansicht = new Simulationsansicht(tiefe, breite, feld, this);
         
         // Einen gültigen Startzustand einnehmen.
         zuruecksetzen();
@@ -119,8 +119,6 @@ public class Simulator
         }
         
         animals.addAll(newAnimals);
-
-        ansicht.zeigeStatus(schritt, feld);
     }
         
     /**
@@ -131,9 +129,6 @@ public class Simulator
         schritt = 0;
         animals.clear();
         bevoelkere();
-        
-        // Zeige den Startzustand in der Ansicht.
-        ansicht.zeigeStatus(schritt, feld);
     }
     
     /**
@@ -143,6 +138,9 @@ public class Simulator
     {
         Random rand = Zufallssteuerung.gibZufallsgenerator();
         feld.raeumen();
+        
+        
+        
         for(int zeile = 0; zeile < feld.gibTiefe(); zeile++) {
             for(int spalte = 0; spalte < feld.gibBreite(); spalte++) {
                 if(rand.nextDouble() <= FUCHSGEBURT_WAHRSCHEINLICH) {
@@ -171,5 +169,10 @@ public class Simulator
             }
         }
                 
+    }
+    
+    public int getSchritt()
+    {
+        return schritt;
     }
 }

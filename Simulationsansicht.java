@@ -4,6 +4,16 @@ import javax.swing.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.util.Timer;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
 /**
  * Eine grafische Ansicht des Simulationsfeldes.
  * Die Ansicht zeigt für jede Position ein gefärbtes Rechteck,
@@ -24,26 +34,25 @@ public class Simulationsansicht extends JFrame
     // Die Farbe für Objekte ohne definierte Farbe
     private static final Color UNDEF_FARBE = Color.gray;
 
-    private final String SCHRITT_PREFIX = "Schritt: ";
-    private final String POPULATION_PREFIX = "Population: ";
-    private JLabel schrittLabel, population;
-    private Feldansicht feldansicht;
+    private static final String SCHRITT_PREFIX = "Schritt: ";
+    private static final String POPULATION_PREFIX = "Population: ";
+    private static JLabel schrittLabel, population;
+    private Canvas feldansicht;
     
     // Ein Statistik-Objekt zur Berechnung und Speicherung
     // von Simulationsdaten
-    private FeldStatistik stats;
+    private static FeldStatistik stats = new FeldStatistik();
     
-    private Simulator sim;
+    private static Simulator sim;
     
     /**
      * Erzeuge eine Ansicht mit der gegebenen Breite und Höhe.
      * @param hoehe Die Höhe der Simulation.
      * @param breite Die Breite der Simulation.
      */
-    public Simulationsansicht(int hoehe, int breite, Simulator sim)
+    public Simulationsansicht(int hoehe, int breite, Feld feld, Simulator sim)
     {
         this.sim = sim;
-        stats = new FeldStatistik();
 
         setTitle("Simulation von Füchsen und Hasen");
         addKeyListener(new AL());
@@ -55,7 +64,7 @@ public class Simulationsansicht extends JFrame
         
         setLocation(100, 50);
         
-        feldansicht = new Feldansicht(hoehe, breite);
+        feldansicht = new Canvas(feld, hoehe, breite);
 
         Container inhalt = getContentPane();
         inhalt.add(schrittLabel, BorderLayout.NORTH);
@@ -79,39 +88,6 @@ public class Simulationsansicht extends JFrame
     
 
     /**
-     * Zeige den aktuellen Zustand des Feldes.
-     * @param schritt welcher Iterationsschritt ist dies.
-     * @param feld das Feld, das angezeigt werden soll.
-     */
-    public void zeigeStatus(int schritt, Feld feld)
-    {
-        if(!isVisible())
-            setVisible(true);
-
-        schrittLabel.setText(SCHRITT_PREFIX + schritt);
-        stats.zuruecksetzen();
-        
-        feldansicht.zeichnenVorbereiten();
-            
-        for(int zeile = 0; zeile < feld.gibTiefe(); zeile++) {
-            for(int spalte = 0; spalte < feld.gibBreite(); spalte++) {
-                Animal tier = feld.gibObjektAn(zeile, spalte);
-                if(tier != null) {
-                    stats.erhoeheZaehler(tier.getClass());
-                    feldansicht.zeichneMarkierung(spalte, zeile, tier.getColor());
-                }
-                else {
-                    feldansicht.zeichneMarkierung(spalte, zeile, LEER_FARBE);
-                }
-            }
-        }
-        stats.zaehlungBeendet();
-
-        population.setText(POPULATION_PREFIX + stats.gibBewohnerInfo(feld));
-        feldansicht.repaint();
-    }
-
-    /**
      * Entscheide, ob die Simulation weiterlaufen soll.
      * @return true wenn noch mehr als eine Spezies lebendig ist.
      */
@@ -129,25 +105,41 @@ public class Simulationsansicht extends JFrame
      * Dies ist fortgeschrittene GUI-Technik - Sie können sie
      * für Ihr Projekt ignorieren, wenn Sie wollen.
      */
-    private class Feldansicht extends JPanel
+    private static class Canvas extends JPanel
     {
         private static final long serialVersionUID = 20060330L;
         private final int DEHN_FAKTOR = 6;
 
-        private int feldBreite, feldHoehe;
         private int xFaktor, yFaktor;
-        Dimension groesse;
-        private Graphics g;
-        private Image feldImage;
-
+        Dimension size;
+        
+        private Image offScreenImage = null;
+        private Graphics offScreenGraphics = null;
+        private Image offScreenImageDrawed = null;
+        private Graphics offScreenGraphicsDrawed = null;              
+        private Timer timer = new Timer();
+        private int counter = 0;
+        
+        private Feld feld;
+        
+        @Override
+        public void update(Graphics g) {                                
+            paint(g);
+            System.out.println("update called ----------->");
+        }
+        
         /**
          * Erzeuge eine neue Komponente zur Feldansicht.
          */
-        public Feldansicht(int hoehe, int breite)
+        public Canvas(Feld feld, int hoehe, int breite)
         {
-            feldHoehe = hoehe;
-            feldBreite = breite;
-            groesse = new Dimension(0, 0);
+            this.xFaktor = 5;
+            this.yFaktor = 5;
+            this.feld = feld;
+            size = new Dimension(breite * xFaktor, hoehe * yFaktor);
+            timer.schedule(new AutomataTask(), 0, 100);
+            this.setPreferredSize(size);
+            this.setBackground(Color.white);
         }
 
         /**
@@ -156,61 +148,86 @@ public class Simulationsansicht extends JFrame
          */
         public Dimension getPreferredSize()
         {
-            return new Dimension(feldBreite * DEHN_FAKTOR,
-                                 feldHoehe * DEHN_FAKTOR);
+            return size;
         }
         
+        
         /**
-         * Bereite eine neue Zeichenrunde vor. Da die Komponente
-         * in der Größe geändert werden kann, muss der Maßstab neu
-         * berechnet werden.
+         * Draw this generation.
+         * @see java.awt.Component#paint(java.awt.Graphics)
          */
-        public void zeichnenVorbereiten()
-        {
-            if(! groesse.equals(getSize())) {  // Größe wurde geändert...
-                groesse = getSize();
-                feldImage = feldansicht.createImage(groesse.width, groesse.height);
-                g = feldImage.getGraphics();
+        @Override
+        public void paint(final Graphics g) {
 
-                xFaktor = groesse.width / feldBreite;
-                if(xFaktor < 1) {
-                    xFaktor = DEHN_FAKTOR;
+            final Dimension d = getSize();
+            if (offScreenImageDrawed == null) {   
+                // Double-buffer: clear the offscreen image.                
+                offScreenImageDrawed = createImage(d.width, d.height);   
+            }          
+            offScreenGraphicsDrawed = offScreenImageDrawed.getGraphics();      
+            offScreenGraphicsDrawed.setColor(Color.white);
+            offScreenGraphicsDrawed.fillRect(0, 0, d.width, d.height) ;                           
+            /////////////////////
+            // Paint Offscreen //
+            /////////////////////
+            
+            
+            
+            /////////////////////
+            
+            renderOffScreen(offScreenImageDrawed.getGraphics());
+            g.drawImage(offScreenImageDrawed, 0, 0, null);
+        }
+        
+        private class AutomataTask extends java.util.TimerTask {
+            public void run() {
+                // Run thread on event dispatching thread
+                if (!EventQueue.isDispatchThread()) {
+                    EventQueue.invokeLater(this);
+                } else {
+                    if (Canvas.this != null) {
+                        Canvas.this.repaint();                        
+                    }
                 }
-                yFaktor = groesse.height / feldHoehe;
-                if(yFaktor < 1) {
-                    yFaktor = DEHN_FAKTOR;
+                
+            } // End of Run
+        } 
+        
+        public void renderOffScreen(final Graphics g)
+        {
+            
+
+        schrittLabel.setText(SCHRITT_PREFIX + sim.getSchritt());
+        stats.zuruecksetzen();
+        
+            for(int zeile = 0; zeile < feld.gibTiefe(); zeile++) {
+                for(int spalte = 0; spalte < feld.gibBreite(); spalte++) {
+                    Animal tier = feld.gibObjektAn(zeile, spalte);
+                    if(tier != null) {
+                        stats.erhoeheZaehler(tier.getClass());
+                        zeichneMarkierung(g, spalte, zeile, tier.getColor());
+                    }
+                    else {
+                        zeichneMarkierung(g, spalte, zeile, LEER_FARBE);
+                    }
                 }
             }
+        
+        
+        stats.zaehlungBeendet();
+
+        population.setText(POPULATION_PREFIX + stats.gibBewohnerInfo(feld));
         }
+        
         
         /**
          * Zeichne an der gegebenen Position ein Rechteck mit
          * der gegebenen Farbe.
          */
-        public void zeichneMarkierung(int x, int y, Color farbe)
+        public void zeichneMarkierung(Graphics g, int x, int y, Color farbe)
         {
             g.setColor(farbe);
             g.fillRect(x * xFaktor, y * yFaktor, xFaktor, yFaktor);
-        }
-
-        /**
-         * Die Komponente für die Feldansicht muss erneut angezeigt
-         * werden. Kopiere das interne Image in die Anzeige.
-         * Der Name der Methode ist durch die GUI-Verwaltung festgelegt.
-         */
-        public void paintComponent(Graphics g)
-        {
-            if(feldImage != null) {
-                Dimension aktuelleGroesse = getSize();
-                if(groesse.equals(aktuelleGroesse)) {
-                    g.drawImage(feldImage, 0, 0, null);
-                }
-                else {
-                    // Größe des aktuellen Images anpassen.
-                    g.drawImage(feldImage, 0, 0, aktuelleGroesse.width,
-                                aktuelleGroesse.height, null);
-                }
-            }
         }
     }
 }
