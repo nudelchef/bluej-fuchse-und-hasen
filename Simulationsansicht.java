@@ -47,10 +47,10 @@ public class Simulationsansicht extends JFrame
     
     /**
      * Erzeuge eine Ansicht mit der gegebenen Breite und Höhe.
-     * @param hoehe Die Höhe der Simulation.
-     * @param breite Die Breite der Simulation.
+     * @param width Die Höhe der Simulation.
+     * @param height Die Breite der Simulation.
      */
-    public Simulationsansicht(int hoehe, int breite, Feld feld, Simulator sim)
+    public Simulationsansicht(int width, int height, Feld feld, Simulator sim)
     {
         this.sim = sim;
 
@@ -64,7 +64,7 @@ public class Simulationsansicht extends JFrame
         
         setLocation(100, 50);
         
-        feldansicht = new Canvas(feld, hoehe, breite);
+        feldansicht = new Canvas(feld, width, height);
 
         Container inhalt = getContentPane();
         inhalt.add(schrittLabel, BorderLayout.NORTH);
@@ -108,7 +108,7 @@ public class Simulationsansicht extends JFrame
     private static class Canvas extends JPanel
     {
         private static final long serialVersionUID = 20060330L;
-        private final int DEHN_FAKTOR = 6;
+        
 
         private int xFaktor, yFaktor;
         Dimension size;
@@ -131,13 +131,13 @@ public class Simulationsansicht extends JFrame
         /**
          * Erzeuge eine neue Komponente zur Feldansicht.
          */
-        public Canvas(Feld feld, int hoehe, int breite)
+        public Canvas(Feld feld, int width, int height)
         {
-            this.xFaktor = 5;
-            this.yFaktor = 5;
+            this.xFaktor = 4;
+            this.yFaktor = 4;
             this.feld = feld;
-            size = new Dimension(breite * xFaktor, hoehe * yFaktor);
-            timer.schedule(new AutomataTask(), 0, 100);
+            size = new Dimension(width * xFaktor, height * yFaktor);
+            timer.schedule(new AutomataTask(), 0, 10);
             this.setPreferredSize(size);
             this.setBackground(Color.white);
         }
@@ -205,10 +205,10 @@ public class Simulationsansicht extends JFrame
                     Animal tier = feld.gibObjektAn(zeile, spalte);
                     if(tier != null) {
                         stats.erhoeheZaehler(tier.getClass());
-                        zeichneMarkierung(g, spalte, zeile, tier.getColor());
+                        zeichneMarkierung(g, zeile, spalte, tier.getColor());
                     }
                     else {
-                        zeichneMarkierung(g, spalte, zeile, LEER_FARBE);
+                        zeichneMarkierung(g, zeile, spalte, LEER_FARBE);
                     }
                 }
             }

@@ -15,9 +15,9 @@ public class Simulator
 {
     // Konstanten für Konfigurationsinformationen über die Simulation.
     // Die Standardbreite für ein Feld.
-    private static final int STANDARD_BREITE = 100;
+    private static final int STANDARD_WIDTH = 150;
     // Die Standardtiefe für ein Feld.
-    private static final int STANDARD_TIEFE = 100;
+    private static final int STANDARD_HEIGHT = 150;
     // Die Wahrscheinlichkeit für die Geburt eines Fuchses an
     // einer beliebigen Location im Feld.
     private static final double FUCHSGEBURT_WAHRSCHEINLICH = 0.02;
@@ -42,7 +42,7 @@ public class Simulator
      */
     public Simulator()
     {
-        this(STANDARD_TIEFE, STANDARD_BREITE);
+        this(STANDARD_WIDTH, STANDARD_HEIGHT);
         
        // simuliere(1000);
     }
@@ -52,19 +52,19 @@ public class Simulator
      * @param tiefe die Tiefe des Feldes (muss größer als Null sein).
      * @param breite die Breite des Feldes (muss größer als Null sein).
      */
-    public Simulator(int tiefe, int breite)
+    public Simulator(int width, int height)
     {
-        if(breite <= 0 || tiefe <= 0) {
+        if(width <= 0 || height <= 0) {
             System.out.println("Abmessungen müssen größer als Null sein.");
             System.out.println("Benutze Standardwerte.");
-            tiefe = STANDARD_TIEFE;
-            breite = STANDARD_BREITE;
+            width = STANDARD_WIDTH;
+            height = STANDARD_HEIGHT;
         }
         animals = new ArrayList<Animal>();
-        feld = new Feld(tiefe, breite);
+        feld = new Feld(width, height);
 
         // Eine Ansicht der Zustände aller Locationen im Feld erzeugen.
-        ansicht = new Simulationsansicht(tiefe, breite, feld, this);
+        ansicht = new Simulationsansicht(width, height, feld, this);
         
         // Einen gültigen Startzustand einnehmen.
         zuruecksetzen();

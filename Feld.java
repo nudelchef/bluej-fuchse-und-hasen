@@ -16,20 +16,20 @@ public class Feld
     private static final Random rand = Zufallssteuerung.gibZufallsgenerator();
     
     // Die Tiefe und die Breite des Feldes
-    private int tiefe, breite;
+    private int width, height;
     // Speicher für die Tiere
     private Animal[][] feld;
 
     /**
      * Erzeuge ein Feld mit den angegebenen Dimensionen.
-     * @param tiefe die Tiefe des Feldes.
-     * @param breite die Breite des Feldes.
+     * @param width die Tiefe des Feldes.
+     * @param height die Breite des Feldes.
      */
-    public Feld(int tiefe, int breite)
+    public Feld(int width, int height)
     {
-        this.tiefe = tiefe;
-        this.breite = breite;
-        feld = new Animal[tiefe][breite];
+        this.width = width;
+        this.height = height;
+        feld = new Animal[width][height];
     }
     
     /**
@@ -37,8 +37,8 @@ public class Feld
      */
     public void raeumen()
     {
-        for(int zeile = 0; zeile < tiefe; zeile++) {
-            for(int spalte = 0; spalte < breite; spalte++) {
+        for(int zeile = 0; zeile < width; zeile++) {
+            for(int spalte = 0; spalte < height; spalte++) {
                 feld[zeile][spalte] = null;
             }
         }
@@ -176,18 +176,18 @@ public class Feld
                     int nextY = y + yDiff;
                     // Ungueltige Locationen und Ausgangslocation ausschliessen.
                     
-                    if (nextX >= breite){
+                    if (nextX >= width){
                         nextX = 0;
                     }else if(nextX < 0)
                     {
-                        nextX = breite-1;
+                        nextX = width-1;
                     }
                     
-                    if (nextY >= tiefe){
+                    if (nextY >= height){
                         nextY = 0;
                     }else if(nextY < 0)
                     {
-                        nextY = tiefe-1;
+                        nextY = height-1;
                     }
                         
                     locationen.add(new Location(nextX, nextY));
@@ -208,7 +208,7 @@ public class Feld
      */
     public int gibTiefe()
     {
-        return tiefe;
+        return width;
     }
     
     /**
@@ -217,6 +217,6 @@ public class Feld
      */
     public int gibBreite()
     {
-        return breite;
+        return height;
     }
 }
